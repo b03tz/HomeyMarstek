@@ -1,0 +1,36 @@
+{
+  "id": "nl.codemaster.marstek",
+  "version": "1.0.0",
+  "compatibility": ">=12.0.0",
+  "sdk": 3,
+  "platforms": ["local"],
+  "name": { "en": "Marstek Energy" },
+  "description": { "en": "Control and monitor Marstek Venus battery systems" },
+  "category": "energy",
+  "brandColor": "#1a73e8",
+  "tags": {
+    "en": ["marstek", "venus", "battery", "solar", "energy", "storage"]
+  },
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "b03tz"
+  },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "b03tz"
+      }
+    }
+  },
+  "source": "https://github.com/b03tz/HomeyMarstek",
+  "homepage": "https://github.com/b03tz/HomeyMarstek",
+  "bugs": {
+    "url": "https://github.com/b03tz/HomeyMarstek/issues"
+  },
+  "support": "https://github.com/b03tz/HomeyMarstek/issues"
+}

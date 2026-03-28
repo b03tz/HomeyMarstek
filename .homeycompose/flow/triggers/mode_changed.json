@@ -1,0 +1,19 @@
+{
+  "title": { "en": "Operating mode changed" },
+  "hint": { "en": "Triggered when the battery operating mode changes" },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=marstek-battery"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "mode",
+      "type": "string",
+      "title": { "en": "Mode" },
+      "example": { "en": "Auto" }
+    }
+  ]
+}

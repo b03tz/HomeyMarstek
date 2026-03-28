@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000">
+  <!-- Battery body -->
+  <rect x="150" y="280" width="700" height="480" rx="60" ry="60" fill="none" stroke="#000" stroke-width="45"/>
+  <!-- Battery terminal -->
+  <rect x="850" y="400" width="80" height="200" rx="25" ry="25" fill="#000"/>
+  <!-- Lightning bolt centered -->
+  <polygon points="560,330 400,540 490,540 430,730 610,490 510,490 580,330" fill="#000"/>
+</svg>

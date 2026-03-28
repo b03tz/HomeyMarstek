@@ -1,0 +1,14 @@
+{
+  "type": "enum",
+  "title": { "en": "Operating Mode" },
+  "uiComponent": "picker",
+  "getable": true,
+  "setable": true,
+  "values": [
+    { "id": "Auto", "title": { "en": "Auto" } },
+    { "id": "AI", "title": { "en": "AI" } },
+    { "id": "Manual", "title": { "en": "Manual" } },
+    { "id": "Passive", "title": { "en": "Passive" } },
+    { "id": "Ups", "title": { "en": "UPS" } }
+  ]
+}

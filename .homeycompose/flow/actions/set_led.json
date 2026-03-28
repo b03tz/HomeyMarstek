@@ -1,0 +1,21 @@
+{
+  "title": { "en": "Set LED panel" },
+  "titleFormatted": { "en": "Turn LED panel [[state]]" },
+  "hint": { "en": "Turn the device LED panel on or off" },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=marstek-battery"
+    },
+    {
+      "type": "dropdown",
+      "name": "state",
+      "title": { "en": "State" },
+      "values": [
+        { "id": "on", "title": { "en": "On" } },
+        { "id": "off", "title": { "en": "Off" } }
+      ]
+    }
+  ]
+}

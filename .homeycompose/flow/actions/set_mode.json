@@ -1,0 +1,24 @@
+{
+  "title": { "en": "Set operating mode" },
+  "titleFormatted": { "en": "Set mode to [[mode]]" },
+  "hint": { "en": "Change the battery operating mode" },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=marstek-battery"
+    },
+    {
+      "type": "dropdown",
+      "name": "mode",
+      "title": { "en": "Mode" },
+      "values": [
+        { "id": "Auto", "title": { "en": "Auto" } },
+        { "id": "AI", "title": { "en": "AI" } },
+        { "id": "Manual", "title": { "en": "Manual" } },
+        { "id": "Passive", "title": { "en": "Passive" } },
+        { "id": "Ups", "title": { "en": "UPS" } }
+      ]
+    }
+  ]
+}

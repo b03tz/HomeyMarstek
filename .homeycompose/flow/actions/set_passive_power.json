@@ -1,0 +1,20 @@
+{
+  "title": { "en": "Set passive power" },
+  "titleFormatted": { "en": "Set passive power to [[power]] W" },
+  "hint": { "en": "Set battery charge/discharge power and switch to Passive mode" },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=marstek-battery"
+    },
+    {
+      "type": "number",
+      "name": "power",
+      "title": { "en": "Power (W)" },
+      "min": -5000,
+      "max": 5000,
+      "step": 50
+    }
+  ]
+}

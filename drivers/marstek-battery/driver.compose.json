@@ -1,0 +1,68 @@
+{
+  "name": { "en": "Marstek Venus Battery" },
+  "class": "battery",
+  "capabilities": [
+    "measure_battery",
+    "operating_mode",
+    "measure_power",
+    "measure_power.solar",
+    "measure_power.battery",
+    "measure_power.offgrid",
+    "measure_temperature",
+    "measure_voltage",
+    "measure_current",
+    "meter_power.imported",
+    "meter_power.exported",
+    "meter_power.solar",
+    "led_control"
+  ],
+  "capabilitiesOptions": {
+    "measure_power": {
+      "title": { "en": "Grid Power" }
+    },
+    "measure_power.solar": {
+      "title": { "en": "Solar Power" }
+    },
+    "measure_power.battery": {
+      "title": { "en": "Battery Power" }
+    },
+    "measure_power.offgrid": {
+      "title": { "en": "Off-grid Power" }
+    },
+    "measure_temperature": {
+      "title": { "en": "Battery Temp" }
+    },
+    "measure_voltage": {
+      "title": { "en": "Battery Voltage" }
+    },
+    "measure_current": {
+      "title": { "en": "Battery Current" }
+    },
+    "meter_power.imported": {
+      "title": { "en": "Grid Input" }
+    },
+    "meter_power.exported": {
+      "title": { "en": "Grid Output" }
+    },
+    "meter_power.solar": {
+      "title": { "en": "Solar Energy" }
+    }
+  },
+  "platforms": ["local"],
+  "connectivity": ["lan"],
+  "energy": {
+    "homeBattery": true,
+    "meterPowerImportedCapability": "meter_power.imported",
+    "meterPowerExportedCapability": "meter_power.exported"
+  },
+  "pair": [
+    { "id": "manual_entry", "navigation": { "next": "list_devices" } },
+    { "id": "list_devices", "template": "list_devices", "navigation": { "next": "add_devices" } },
+    { "id": "add_devices", "template": "add_devices" }
+  ],
+  "images": {
+    "small": "/drivers/marstek-battery/assets/images/small.png",
+    "large": "/drivers/marstek-battery/assets/images/large.png",
+    "xlarge": "/drivers/marstek-battery/assets/images/xlarge.png"
+  }
+}

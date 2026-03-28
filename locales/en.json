@@ -1,0 +1,16 @@
+{
+  "capabilities": {
+    "measure_solar_power": {
+      "title": "Solar Power"
+    },
+    "measure_battery_power": {
+      "title": "Battery Power"
+    },
+    "meter_grid_input": {
+      "title": "Grid Input"
+    },
+    "meter_grid_output": {
+      "title": "Grid Output"
+    }
+  }
+}

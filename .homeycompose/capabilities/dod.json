@@ -1,0 +1,12 @@
+{
+  "type": "number",
+  "title": { "en": "Depth of Discharge" },
+  "uiComponent": "slider",
+  "getable": true,
+  "setable": true,
+  "units": { "en": "%" },
+  "min": 30,
+  "max": 88,
+  "step": 1,
+  "decimals": 0
+}

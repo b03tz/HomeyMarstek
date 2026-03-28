@@ -1,0 +1,24 @@
+{
+  "title": { "en": "Mode is !{{|not}} [[mode]]" },
+  "titleFormatted": { "en": "Mode is !{{|not}} [[mode]]" },
+  "hint": { "en": "Check if the battery is in a specific operating mode" },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=marstek-battery"
+    },
+    {
+      "type": "dropdown",
+      "name": "mode",
+      "title": { "en": "Mode" },
+      "values": [
+        { "id": "Auto", "title": { "en": "Auto" } },
+        { "id": "AI", "title": { "en": "AI" } },
+        { "id": "Manual", "title": { "en": "Manual" } },
+        { "id": "Passive", "title": { "en": "Passive" } },
+        { "id": "Ups", "title": { "en": "UPS" } }
+      ]
+    }
+  ]
+}

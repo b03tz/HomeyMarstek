@@ -1,0 +1,20 @@
+{
+  "title": { "en": "Set depth of discharge" },
+  "titleFormatted": { "en": "Set DOD to [[value]]%" },
+  "hint": { "en": "Set the battery depth of discharge (30-88%)" },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=marstek-battery"
+    },
+    {
+      "type": "number",
+      "name": "value",
+      "title": { "en": "DOD (%)" },
+      "min": 30,
+      "max": 88,
+      "step": 1
+    }
+  ]
+}

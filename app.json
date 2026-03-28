@@ -1,0 +1,542 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "nl.codemaster.marstek",
+  "version": "1.0.0",
+  "compatibility": ">=12.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Marstek Energy"
+  },
+  "description": {
+    "en": "Control and monitor Marstek Venus battery systems"
+  },
+  "category": "energy",
+  "brandColor": "#1a73e8",
+  "tags": {
+    "en": [
+      "marstek",
+      "venus",
+      "battery",
+      "solar",
+      "energy",
+      "storage"
+    ]
+  },
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "b03tz"
+  },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "username": "b03tz"
+      }
+    }
+  },
+  "source": "https://github.com/b03tz/HomeyMarstek",
+  "homepage": "https://github.com/b03tz/HomeyMarstek",
+  "bugs": {
+    "url": "https://github.com/b03tz/HomeyMarstek/issues"
+  },
+  "support": "https://github.com/b03tz/HomeyMarstek/issues",
+  "flow": {
+    "triggers": [
+      {
+        "title": {
+          "en": "Operating mode changed"
+        },
+        "hint": {
+          "en": "Triggered when the battery operating mode changes"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=marstek-battery"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "mode",
+            "type": "string",
+            "title": {
+              "en": "Mode"
+            },
+            "example": {
+              "en": "Auto"
+            }
+          }
+        ],
+        "id": "mode_changed"
+      }
+    ],
+    "conditions": [
+      {
+        "title": {
+          "en": "Mode is !{{|not}} [[mode]]"
+        },
+        "titleFormatted": {
+          "en": "Mode is !{{|not}} [[mode]]"
+        },
+        "hint": {
+          "en": "Check if the battery is in a specific operating mode"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=marstek-battery"
+          },
+          {
+            "type": "dropdown",
+            "name": "mode",
+            "title": {
+              "en": "Mode"
+            },
+            "values": [
+              {
+                "id": "Auto",
+                "title": {
+                  "en": "Auto"
+                }
+              },
+              {
+                "id": "AI",
+                "title": {
+                  "en": "AI"
+                }
+              },
+              {
+                "id": "Manual",
+                "title": {
+                  "en": "Manual"
+                }
+              },
+              {
+                "id": "Passive",
+                "title": {
+                  "en": "Passive"
+                }
+              },
+              {
+                "id": "Ups",
+                "title": {
+                  "en": "UPS"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "mode_is"
+      }
+    ],
+    "actions": [
+      {
+        "title": {
+          "en": "Set depth of discharge"
+        },
+        "titleFormatted": {
+          "en": "Set DOD to [[value]]%"
+        },
+        "hint": {
+          "en": "Set the battery depth of discharge (30-88%)"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=marstek-battery"
+          },
+          {
+            "type": "number",
+            "name": "value",
+            "title": {
+              "en": "DOD (%)"
+            },
+            "min": 30,
+            "max": 88,
+            "step": 1
+          }
+        ],
+        "id": "set_dod"
+      },
+      {
+        "title": {
+          "en": "Set LED panel"
+        },
+        "titleFormatted": {
+          "en": "Turn LED panel [[state]]"
+        },
+        "hint": {
+          "en": "Turn the device LED panel on or off"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=marstek-battery"
+          },
+          {
+            "type": "dropdown",
+            "name": "state",
+            "title": {
+              "en": "State"
+            },
+            "values": [
+              {
+                "id": "on",
+                "title": {
+                  "en": "On"
+                }
+              },
+              {
+                "id": "off",
+                "title": {
+                  "en": "Off"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "set_led"
+      },
+      {
+        "title": {
+          "en": "Set operating mode"
+        },
+        "titleFormatted": {
+          "en": "Set mode to [[mode]]"
+        },
+        "hint": {
+          "en": "Change the battery operating mode"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=marstek-battery"
+          },
+          {
+            "type": "dropdown",
+            "name": "mode",
+            "title": {
+              "en": "Mode"
+            },
+            "values": [
+              {
+                "id": "Auto",
+                "title": {
+                  "en": "Auto"
+                }
+              },
+              {
+                "id": "AI",
+                "title": {
+                  "en": "AI"
+                }
+              },
+              {
+                "id": "Manual",
+                "title": {
+                  "en": "Manual"
+                }
+              },
+              {
+                "id": "Passive",
+                "title": {
+                  "en": "Passive"
+                }
+              },
+              {
+                "id": "Ups",
+                "title": {
+                  "en": "UPS"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "set_mode"
+      },
+      {
+        "title": {
+          "en": "Set passive power"
+        },
+        "titleFormatted": {
+          "en": "Set passive power to [[power]] W"
+        },
+        "hint": {
+          "en": "Set battery charge/discharge power and switch to Passive mode"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=marstek-battery"
+          },
+          {
+            "type": "number",
+            "name": "power",
+            "title": {
+              "en": "Power (W)"
+            },
+            "min": -5000,
+            "max": 5000,
+            "step": 50
+          }
+        ],
+        "id": "set_passive_power"
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "name": {
+        "en": "Marstek Venus Battery"
+      },
+      "class": "battery",
+      "capabilities": [
+        "measure_battery",
+        "operating_mode",
+        "measure_power",
+        "measure_power.solar",
+        "measure_power.battery",
+        "measure_power.offgrid",
+        "measure_temperature",
+        "measure_voltage",
+        "measure_current",
+        "meter_power.imported",
+        "meter_power.exported",
+        "meter_power.solar",
+        "led_control"
+      ],
+      "capabilitiesOptions": {
+        "measure_power": {
+          "title": {
+            "en": "Grid Power"
+          }
+        },
+        "measure_power.solar": {
+          "title": {
+            "en": "Solar Power"
+          }
+        },
+        "measure_power.battery": {
+          "title": {
+            "en": "Battery Power"
+          }
+        },
+        "measure_power.offgrid": {
+          "title": {
+            "en": "Off-grid Power"
+          }
+        },
+        "measure_temperature": {
+          "title": {
+            "en": "Battery Temp"
+          }
+        },
+        "measure_voltage": {
+          "title": {
+            "en": "Battery Voltage"
+          }
+        },
+        "measure_current": {
+          "title": {
+            "en": "Battery Current"
+          }
+        },
+        "meter_power.imported": {
+          "title": {
+            "en": "Grid Input"
+          }
+        },
+        "meter_power.exported": {
+          "title": {
+            "en": "Grid Output"
+          }
+        },
+        "meter_power.solar": {
+          "title": {
+            "en": "Solar Energy"
+          }
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "energy": {
+        "homeBattery": true,
+        "meterPowerImportedCapability": "meter_power.imported",
+        "meterPowerExportedCapability": "meter_power.exported"
+      },
+      "pair": [
+        {
+          "id": "manual_entry",
+          "navigation": {
+            "next": "list_devices"
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "images": {
+        "small": "/drivers/marstek-battery/assets/images/small.png",
+        "large": "/drivers/marstek-battery/assets/images/large.png",
+        "xlarge": "/drivers/marstek-battery/assets/images/xlarge.png"
+      },
+      "id": "marstek-battery",
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Connection"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "label": {
+                "en": "IP Address"
+              },
+              "value": ""
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "label": {
+                "en": "UDP Port"
+              },
+              "value": 30000,
+              "min": 1024,
+              "max": 65535
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Polling"
+          },
+          "children": [
+            {
+              "id": "pollInterval",
+              "type": "number",
+              "label": {
+                "en": "Poll Interval (seconds)"
+              },
+              "value": 60,
+              "min": 5,
+              "max": 300
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "capabilities": {
+    "dod": {
+      "type": "number",
+      "title": {
+        "en": "Depth of Discharge"
+      },
+      "uiComponent": "slider",
+      "getable": true,
+      "setable": true,
+      "units": {
+        "en": "%"
+      },
+      "min": 30,
+      "max": 88,
+      "step": 1,
+      "decimals": 0
+    },
+    "led_control": {
+      "type": "boolean",
+      "title": {
+        "en": "LED Panel"
+      },
+      "uiComponent": "toggle",
+      "getable": true,
+      "setable": true,
+      "insights": false
+    },
+    "operating_mode": {
+      "type": "enum",
+      "title": {
+        "en": "Operating Mode"
+      },
+      "uiComponent": "picker",
+      "getable": true,
+      "setable": true,
+      "values": [
+        {
+          "id": "Auto",
+          "title": {
+            "en": "Auto"
+          }
+        },
+        {
+          "id": "AI",
+          "title": {
+            "en": "AI"
+          }
+        },
+        {
+          "id": "Manual",
+          "title": {
+            "en": "Manual"
+          }
+        },
+        {
+          "id": "Passive",
+          "title": {
+            "en": "Passive"
+          }
+        },
+        {
+          "id": "Ups",
+          "title": {
+            "en": "UPS"
+          }
+        }
+      ]
+    },
+    "passive_power": {
+      "type": "number",
+      "title": {
+        "en": "Passive Power"
+      },
+      "uiComponent": "slider",
+      "getable": true,
+      "setable": true,
+      "units": {
+        "en": "W"
+      },
+      "min": -5000,
+      "max": 5000,
+      "step": 50,
+      "decimals": 0
+    }
+  }
+}
