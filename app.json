@@ -11,7 +11,7 @@
     "en": "Marstek Energy"
   },
   "description": {
-    "en": "Control and monitor Marstek Venus battery systems"
+    "en": "Control and monitor Marstek Venus batteries and CT003 meters"
   },
   "category": "energy",
   "brandColor": "#1a73e8",
@@ -22,7 +22,10 @@
       "battery",
       "solar",
       "energy",
-      "storage"
+      "storage",
+      "meter",
+      "ct003",
+      "ct"
     ]
   },
   "permissions": [],
@@ -49,6 +52,34 @@
   "support": "https://github.com/b03tz/HomeyMarstek/issues",
   "flow": {
     "triggers": [
+      {
+        "title": {
+          "en": "Total power changed"
+        },
+        "hint": {
+          "en": "Triggered when the meter total power reading changes"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=marstek-meter"
+          }
+        ],
+        "tokens": [
+          {
+            "name": "power",
+            "type": "number",
+            "title": {
+              "en": "Power (W)"
+            },
+            "example": {
+              "en": "-500"
+            }
+          }
+        ],
+        "id": "meter_power_changed"
+      },
       {
         "title": {
           "en": "Operating mode changed"
@@ -79,6 +110,91 @@
       }
     ],
     "conditions": [
+      {
+        "title": {
+          "en": "Phase [[phase]] power is !{{above|below}} [[power]] W"
+        },
+        "titleFormatted": {
+          "en": "Phase [[phase]] power is !{{above|below}} [[power]] W"
+        },
+        "hint": {
+          "en": "Check if a specific phase power is above or below a threshold"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=marstek-meter"
+          },
+          {
+            "type": "dropdown",
+            "name": "phase",
+            "title": {
+              "en": "Phase"
+            },
+            "values": [
+              {
+                "id": "a",
+                "title": {
+                  "en": "A"
+                }
+              },
+              {
+                "id": "b",
+                "title": {
+                  "en": "B"
+                }
+              },
+              {
+                "id": "c",
+                "title": {
+                  "en": "C"
+                }
+              }
+            ]
+          },
+          {
+            "type": "number",
+            "name": "power",
+            "title": {
+              "en": "Power (W)"
+            },
+            "min": -10000,
+            "max": 10000,
+            "step": 10
+          }
+        ],
+        "id": "meter_phase_above"
+      },
+      {
+        "title": {
+          "en": "Total power is !{{above|below}} [[power]] W"
+        },
+        "titleFormatted": {
+          "en": "Total power is !{{above|below}} [[power]] W"
+        },
+        "hint": {
+          "en": "Check if the total grid power is above or below a threshold (negative = exporting)"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=marstek-meter"
+          },
+          {
+            "type": "number",
+            "name": "power",
+            "title": {
+              "en": "Power (W)"
+            },
+            "min": -10000,
+            "max": 10000,
+            "step": 10
+          }
+        ],
+        "id": "meter_power_above"
+      },
       {
         "title": {
           "en": "Mode is !{{|not}} [[mode]]"
@@ -447,6 +563,177 @@
               },
               "value": 60,
               "min": 5,
+              "max": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": {
+        "en": "Marstek CT003 Meter"
+      },
+      "class": "sensor",
+      "capabilities": [
+        "measure_power",
+        "measure_power.phase_a",
+        "measure_power.phase_b",
+        "measure_power.phase_c",
+        "measure_power.charge_a",
+        "measure_power.charge_b",
+        "measure_power.charge_c",
+        "measure_power.total_charge",
+        "measure_power.discharge_a",
+        "measure_power.discharge_b",
+        "measure_power.discharge_c",
+        "measure_power.total_discharge",
+        "meter_power.charge",
+        "meter_power.discharge"
+      ],
+      "capabilitiesOptions": {
+        "measure_power": {
+          "title": {
+            "en": "Total Power"
+          }
+        },
+        "measure_power.phase_a": {
+          "title": {
+            "en": "Phase A"
+          }
+        },
+        "measure_power.phase_b": {
+          "title": {
+            "en": "Phase B"
+          }
+        },
+        "measure_power.phase_c": {
+          "title": {
+            "en": "Phase C"
+          }
+        },
+        "measure_power.charge_a": {
+          "title": {
+            "en": "Phase A Charge"
+          }
+        },
+        "measure_power.charge_b": {
+          "title": {
+            "en": "Phase B Charge"
+          }
+        },
+        "measure_power.charge_c": {
+          "title": {
+            "en": "Phase C Charge"
+          }
+        },
+        "measure_power.total_charge": {
+          "title": {
+            "en": "Total Charge"
+          }
+        },
+        "measure_power.discharge_a": {
+          "title": {
+            "en": "Phase A Discharge"
+          }
+        },
+        "measure_power.discharge_b": {
+          "title": {
+            "en": "Phase B Discharge"
+          }
+        },
+        "measure_power.discharge_c": {
+          "title": {
+            "en": "Phase C Discharge"
+          }
+        },
+        "measure_power.total_discharge": {
+          "title": {
+            "en": "Total Discharge"
+          }
+        },
+        "meter_power.charge": {
+          "title": {
+            "en": "Total Charge Energy"
+          }
+        },
+        "meter_power.discharge": {
+          "title": {
+            "en": "Total Discharge Energy"
+          }
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "pair": [
+        {
+          "id": "manual_entry",
+          "navigation": {
+            "next": "list_devices"
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "images": {
+        "small": "/drivers/marstek-meter/assets/images/small.png",
+        "large": "/drivers/marstek-meter/assets/images/large.png",
+        "xlarge": "/drivers/marstek-meter/assets/images/xlarge.png"
+      },
+      "id": "marstek-meter",
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "Connection"
+          },
+          "children": [
+            {
+              "id": "address",
+              "type": "text",
+              "label": {
+                "en": "IP Address"
+              },
+              "value": ""
+            },
+            {
+              "id": "port",
+              "type": "number",
+              "label": {
+                "en": "UDP Port"
+              },
+              "value": 12345,
+              "min": 1,
+              "max": 65535
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Polling"
+          },
+          "children": [
+            {
+              "id": "pollInterval",
+              "type": "number",
+              "label": {
+                "en": "Poll Interval (seconds)"
+              },
+              "value": 2,
+              "min": 2,
               "max": 300
             }
           ]

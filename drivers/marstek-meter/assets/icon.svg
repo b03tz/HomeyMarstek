@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000">
+  <!-- Meter body -->
+  <rect x="200" y="150" width="600" height="700" rx="60" ry="60" fill="none" stroke="#000" stroke-width="40"/>
+  <!-- Display circle -->
+  <circle cx="500" cy="420" r="200" fill="none" stroke="#000" stroke-width="30"/>
+  <!-- Gauge needle -->
+  <line x1="500" y1="420" x2="380" y2="290" stroke="#000" stroke-width="25" stroke-linecap="round"/>
+  <!-- Needle center dot -->
+  <circle cx="500" cy="420" r="25" fill="#000"/>
+  <!-- Scale marks -->
+  <line x1="340" y1="268" x2="358" y2="296" stroke="#000" stroke-width="15" stroke-linecap="round"/>
+  <line x1="308" y1="370" x2="338" y2="382" stroke="#000" stroke-width="15" stroke-linecap="round"/>
+  <line x1="500" y1="225" x2="500" y2="258" stroke="#000" stroke-width="15" stroke-linecap="round"/>
+  <line x1="660" y1="268" x2="642" y2="296" stroke="#000" stroke-width="15" stroke-linecap="round"/>
+  <line x1="692" y1="370" x2="662" y2="382" stroke="#000" stroke-width="15" stroke-linecap="round"/>
+  <!-- kW label -->
+  <text x="500" y="560" font-family="Arial, sans-serif" font-size="80" font-weight="bold" fill="#000" text-anchor="middle">kW</text>
+  <!-- Three-phase connection terminals -->
+  <circle cx="350" cy="750" r="30" fill="#000"/>
+  <circle cx="500" cy="750" r="30" fill="#000"/>
+  <circle cx="650" cy="750" r="30" fill="#000"/>
+  <!-- Phase labels -->
+  <text x="350" y="720" font-family="Arial, sans-serif" font-size="40" fill="#000" text-anchor="middle">A</text>
+  <text x="500" y="720" font-family="Arial, sans-serif" font-size="40" fill="#000" text-anchor="middle">B</text>
+  <text x="650" y="720" font-family="Arial, sans-serif" font-size="40" fill="#000" text-anchor="middle">C</text>
+</svg>

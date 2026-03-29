@@ -4,6 +4,7 @@ const Homey = require('homey');
 
 const POLL_INTERVAL = 60;
 const REQUEST_SPACING = 2000;
+const RETRY_INTERVAL = 2000;
 
 class MarstekBatteryDevice extends Homey.Device {
 
@@ -57,7 +58,7 @@ class MarstekBatteryDevice extends Homey.Device {
         break;
     }
 
-    const response = await this._sendCommand('ES.SetMode', { id: 0, config });
+    const response = await this._sendCommandWithRetry('ES.SetMode', { id: 0, config });
     this.log('SetMode response:', JSON.stringify(response));
 
     if (response.result && response.result.set_result === false) {
@@ -68,7 +69,7 @@ class MarstekBatteryDevice extends Homey.Device {
   async _setPassivePower(power) {
     this.log(`Setting passive power to: ${power}W`);
 
-    const response = await this._sendCommand('ES.SetMode', {
+    const response = await this._sendCommandWithRetry('ES.SetMode', {
       id: 0,
       config: {
         mode: 'Passive',
@@ -91,7 +92,7 @@ class MarstekBatteryDevice extends Homey.Device {
   async _setDOD(value) {
     this.log(`Setting DOD to: ${value}`);
 
-    const response = await this._sendCommand('DOD.SET', { value });
+    const response = await this._sendCommandWithRetry('DOD.SET', { value });
     this.log('SetDOD response:', JSON.stringify(response));
 
     if (response.result && response.result.set_result === false) {
@@ -102,7 +103,7 @@ class MarstekBatteryDevice extends Homey.Device {
   async _setLED(on) {
     this.log(`Setting LED: ${on ? 'on' : 'off'}`);
 
-    const response = await this._sendCommand('Led.Ctrl', { state: on ? 1 : 0 });
+    const response = await this._sendCommandWithRetry('Led.Ctrl', { state: on ? 1 : 0 });
     this.log('SetLED response:', JSON.stringify(response));
 
     if (response.result && response.result.set_result === false) {
@@ -148,6 +149,26 @@ class MarstekBatteryDevice extends Homey.Device {
     return this.homey.app.sendCommand(address, port, method, params);
   }
 
+  async _sendCommandWithRetry(method, params = { id: 0 }) {
+    const backoffDelays = [2000, 5000, 10000, 30000];
+    let lastError;
+
+    for (let attempt = 0; attempt <= backoffDelays.length; attempt++) {
+      try {
+        return await this._sendCommand(method, params);
+      } catch (err) {
+        lastError = err;
+        if (attempt < backoffDelays.length) {
+          this.log(`${method} attempt ${attempt + 1} failed (${err.message}), retrying in ${backoffDelays[attempt] / 1000}s...`);
+          await this._delay(backoffDelays[attempt]);
+        }
+      }
+    }
+
+    this.error(`${method} failed after ${backoffDelays.length + 1} attempts`);
+    throw lastError;
+  }
+
   async _pollEndpoint(method, handler) {
     try {
       const response = await this._sendCommand(method);
@@ -161,7 +182,7 @@ class MarstekBatteryDevice extends Homey.Device {
     return false;
   }
 
-  async _poll() {
+  async _pollOnce() {
     let anySuccess = false;
 
     // 1) ES.GetStatus - power and energy data
@@ -212,17 +233,39 @@ class MarstekBatteryDevice extends Homey.Device {
     });
     anySuccess = anySuccess || modeOk;
 
-    // Track consecutive full failures
-    if (anySuccess) {
-      this.consecutiveErrors = 0;
-      await this.setAvailable();
-    } else {
-      this.consecutiveErrors++;
-      this.log(`All endpoints failed (${this.consecutiveErrors} consecutive)`);
+    return anySuccess;
+  }
 
-      if (this.consecutiveErrors >= 5) {
-        await this.setUnavailable('Device not responding').catch(() => {});
+  async _poll() {
+    if (this._polling) return;
+    this._polling = true;
+
+    const intervalMs = (this.getSetting('pollInterval') || POLL_INTERVAL) * 1000;
+    const deadline = Date.now() + intervalMs - 1000;
+
+    try {
+      let success = await this._pollOnce();
+
+      // Retry every 2s until success or next poll is due
+      while (!success && Date.now() + RETRY_INTERVAL < deadline) {
+        this.log('Poll failed, retrying in 2s...');
+        await this._delay(RETRY_INTERVAL);
+        success = await this._pollOnce();
       }
+
+      if (success) {
+        this.consecutiveErrors = 0;
+        await this.setAvailable();
+      } else {
+        this.consecutiveErrors++;
+        this.log(`All endpoints failed (${this.consecutiveErrors} consecutive)`);
+
+        if (this.consecutiveErrors >= 5) {
+          await this.setUnavailable('Device not responding').catch(() => {});
+        }
+      }
+    } finally {
+      this._polling = false;
     }
   }
 

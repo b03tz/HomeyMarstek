@@ -1,0 +1,19 @@
+{
+  "title": { "en": "Total power changed" },
+  "hint": { "en": "Triggered when the meter total power reading changes" },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=marstek-meter"
+    }
+  ],
+  "tokens": [
+    {
+      "name": "power",
+      "type": "number",
+      "title": { "en": "Power (W)" },
+      "example": { "en": "-500" }
+    }
+  ]
+}

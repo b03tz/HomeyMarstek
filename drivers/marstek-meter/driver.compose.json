@@ -1,0 +1,76 @@
+{
+  "name": { "en": "Marstek CT003 Meter" },
+  "class": "sensor",
+  "capabilities": [
+    "measure_power",
+    "measure_power.phase_a",
+    "measure_power.phase_b",
+    "measure_power.phase_c",
+    "measure_power.charge_a",
+    "measure_power.charge_b",
+    "measure_power.charge_c",
+    "measure_power.total_charge",
+    "measure_power.discharge_a",
+    "measure_power.discharge_b",
+    "measure_power.discharge_c",
+    "measure_power.total_discharge",
+    "meter_power.charge",
+    "meter_power.discharge"
+  ],
+  "capabilitiesOptions": {
+    "measure_power": {
+      "title": { "en": "Total Power" }
+    },
+    "measure_power.phase_a": {
+      "title": { "en": "Phase A" }
+    },
+    "measure_power.phase_b": {
+      "title": { "en": "Phase B" }
+    },
+    "measure_power.phase_c": {
+      "title": { "en": "Phase C" }
+    },
+    "measure_power.charge_a": {
+      "title": { "en": "Phase A Charge" }
+    },
+    "measure_power.charge_b": {
+      "title": { "en": "Phase B Charge" }
+    },
+    "measure_power.charge_c": {
+      "title": { "en": "Phase C Charge" }
+    },
+    "measure_power.total_charge": {
+      "title": { "en": "Total Charge" }
+    },
+    "measure_power.discharge_a": {
+      "title": { "en": "Phase A Discharge" }
+    },
+    "measure_power.discharge_b": {
+      "title": { "en": "Phase B Discharge" }
+    },
+    "measure_power.discharge_c": {
+      "title": { "en": "Phase C Discharge" }
+    },
+    "measure_power.total_discharge": {
+      "title": { "en": "Total Discharge" }
+    },
+    "meter_power.charge": {
+      "title": { "en": "Total Charge Energy" }
+    },
+    "meter_power.discharge": {
+      "title": { "en": "Total Discharge Energy" }
+    }
+  },
+  "platforms": ["local"],
+  "connectivity": ["lan"],
+  "pair": [
+    { "id": "manual_entry", "navigation": { "next": "list_devices" } },
+    { "id": "list_devices", "template": "list_devices", "navigation": { "next": "add_devices" } },
+    { "id": "add_devices", "template": "add_devices" }
+  ],
+  "images": {
+    "small": "/drivers/marstek-meter/assets/images/small.png",
+    "large": "/drivers/marstek-meter/assets/images/large.png",
+    "xlarge": "/drivers/marstek-meter/assets/images/xlarge.png"
+  }
+}

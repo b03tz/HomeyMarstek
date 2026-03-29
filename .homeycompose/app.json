@@ -5,11 +5,11 @@
   "sdk": 3,
   "platforms": ["local"],
   "name": { "en": "Marstek Energy" },
-  "description": { "en": "Control and monitor Marstek Venus battery systems" },
+  "description": { "en": "Control and monitor Marstek Venus batteries and CT003 meters" },
   "category": "energy",
   "brandColor": "#1a73e8",
   "tags": {
-    "en": ["marstek", "venus", "battery", "solar", "energy", "storage"]
+    "en": ["marstek", "venus", "battery", "solar", "energy", "storage", "meter", "ct003", "ct"]
   },
   "permissions": [],
   "images": {

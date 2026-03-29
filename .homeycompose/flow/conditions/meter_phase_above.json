@@ -1,0 +1,30 @@
+{
+  "title": { "en": "Phase [[phase]] power is !{{above|below}} [[power]] W" },
+  "titleFormatted": { "en": "Phase [[phase]] power is !{{above|below}} [[power]] W" },
+  "hint": { "en": "Check if a specific phase power is above or below a threshold" },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=marstek-meter"
+    },
+    {
+      "type": "dropdown",
+      "name": "phase",
+      "title": { "en": "Phase" },
+      "values": [
+        { "id": "a", "title": { "en": "A" } },
+        { "id": "b", "title": { "en": "B" } },
+        { "id": "c", "title": { "en": "C" } }
+      ]
+    },
+    {
+      "type": "number",
+      "name": "power",
+      "title": { "en": "Power (W)" },
+      "min": -10000,
+      "max": 10000,
+      "step": 10
+    }
+  ]
+}

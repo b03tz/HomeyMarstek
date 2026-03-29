@@ -1,0 +1,20 @@
+{
+  "title": { "en": "Total power is !{{above|below}} [[power]] W" },
+  "titleFormatted": { "en": "Total power is !{{above|below}} [[power]] W" },
+  "hint": { "en": "Check if the total grid power is above or below a threshold (negative = exporting)" },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=marstek-meter"
+    },
+    {
+      "type": "number",
+      "name": "power",
+      "title": { "en": "Power (W)" },
+      "min": -10000,
+      "max": 10000,
+      "step": 10
+    }
+  ]
+}

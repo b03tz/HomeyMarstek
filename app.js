@@ -2,6 +2,7 @@
 
 const Homey = require('homey');
 const dgram = require('dgram');
+const { buildPayload, decodeResponse } = require('./lib/marstek-ct-protocol');
 
 class MarstekApp extends Homey.App {
 
@@ -24,12 +25,12 @@ class MarstekApp extends Homey.App {
           const key = data.id;
           if (this.pendingRequests.has(key)) {
             const req = this.pendingRequests.get(key);
-            clearTimeout(req.timer);
+            this.homey.clearTimeout(req.timer);
             this.pendingRequests.delete(key);
             req.resolve(data);
           }
         } catch (e) {
-          this.error('UDP parse error:', e.message);
+          // Not JSON — binary CT responses are handled by temporary collectors
         }
       });
 
@@ -45,6 +46,8 @@ class MarstekApp extends Homey.App {
       });
     });
   }
+
+  // ── Battery commands (JSON protocol) ────────────────
 
   sendCommand(ip, port, method, params = { id: 0 }, timeout = 5000) {
     return new Promise((resolve, reject) => {
@@ -109,6 +112,80 @@ class MarstekApp extends Homey.App {
 
     return devices;
   }
+
+  // ── Meter commands (binary CT protocol) ─────────────
+
+  sendMeterCommand(host, port, deviceType, batteryMac, ctType, ctMac, timeout = 5000) {
+    return new Promise((resolve, reject) => {
+      if (!this.socket) {
+        return reject(new Error('UDP socket not initialized'));
+      }
+
+      port = parseInt(port, 10) || 12345;
+      const payload = buildPayload(deviceType, batteryMac, ctType, ctMac);
+      let settled = false;
+
+      // Use same temporary listener pattern as discovery (proven to work on Homey)
+      const collector = (msg, rinfo) => {
+        if (settled) return;
+        try {
+          const data = decodeResponse(msg);
+          if (data.meter_mac && data.meter_mac === ctMac) {
+            settled = true;
+            this.homey.clearTimeout(timer);
+            this.socket.removeListener('message', collector);
+            resolve(data);
+          }
+        } catch (e) { /* not a CT response, ignore */ }
+      };
+
+      const timer = this.homey.setTimeout(() => {
+        if (settled) return;
+        settled = true;
+        this.socket.removeListener('message', collector);
+        reject(new Error(`Timeout: CT meter ${ctMac} at ${host}:${port}`));
+      }, timeout);
+
+      this.socket.on('message', collector);
+
+      this.socket.send(payload, port, '255.255.255.255', (err) => {
+        if (err && !settled) {
+          settled = true;
+          this.homey.clearTimeout(timer);
+          this.socket.removeListener('message', collector);
+          reject(err);
+        }
+      });
+    });
+  }
+
+  async discoverMeters(port = 12345) {
+    const meters = [];
+    const payload = buildPayload('HMG-50', '000000000000', 'HME-3', '000000000000');
+
+    const collector = (msg, rinfo) => {
+      try {
+        const data = decodeResponse(msg);
+        if (data.meter_mac && !meters.find(m => m.meter_mac === data.meter_mac)) {
+          this.log(`Discovered meter: ${data.meter_dev_type} (${data.meter_mac}) at ${rinfo.address}`);
+          meters.push({ ...data, ip: rinfo.address, port });
+        }
+      } catch (e) { /* ignore non-meter responses */ }
+    };
+
+    this.socket.on('message', collector);
+
+    for (let i = 0; i < 3; i++) {
+      this.socket.send(payload, port, '255.255.255.255');
+      await new Promise(resolve => this.homey.setTimeout(resolve, 2000));
+    }
+
+    this.socket.removeListener('message', collector);
+
+    return meters;
+  }
+
+  // ── Cleanup ─────────────────────────────────────────
 
   async onUninit() {
     for (const [id, req] of this.pendingRequests) {

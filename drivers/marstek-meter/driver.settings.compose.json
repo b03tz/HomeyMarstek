@@ -1,0 +1,36 @@
+[
+  {
+    "type": "group",
+    "label": { "en": "Connection" },
+    "children": [
+      {
+        "id": "address",
+        "type": "text",
+        "label": { "en": "IP Address" },
+        "value": ""
+      },
+      {
+        "id": "port",
+        "type": "number",
+        "label": { "en": "UDP Port" },
+        "value": 12345,
+        "min": 1,
+        "max": 65535
+      }
+    ]
+  },
+  {
+    "type": "group",
+    "label": { "en": "Polling" },
+    "children": [
+      {
+        "id": "pollInterval",
+        "type": "number",
+        "label": { "en": "Poll Interval (seconds)" },
+        "value": 2,
+        "min": 2,
+        "max": 300
+      }
+    ]
+  }
+]
