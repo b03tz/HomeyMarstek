@@ -53,6 +53,13 @@ class MarstekMeterDevice extends Homey.Device {
     if (this._polling) return;
     this._polling = true;
 
+    // Skip polling if socket is being recreated (don't count as error)
+    if (!this.homey.app.socket) {
+      this.log('Socket not ready, skipping poll');
+      this._polling = false;
+      return;
+    }
+
     const { address, port } = this.getSettings();
     const { ct_mac, ct_type, device_type } = this.getStore();
 

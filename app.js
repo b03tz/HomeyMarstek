@@ -10,6 +10,7 @@ class MarstekApp extends Homey.App {
     this.requestId = 0;
     this.pendingRequests = new Map();
     this.socket = null;
+    this._recreating = false;
 
     await this._initSocket();
     this.log('Marstek Energy app started');
@@ -17,9 +18,9 @@ class MarstekApp extends Homey.App {
 
   async _initSocket() {
     return new Promise((resolve, reject) => {
-      this.socket = dgram.createSocket({ type: 'udp4', reuseAddr: true });
+      const sock = dgram.createSocket({ type: 'udp4', reuseAddr: true });
 
-      this.socket.on('message', (msg, rinfo) => {
+      sock.on('message', (msg, rinfo) => {
         try {
           const data = JSON.parse(msg.toString());
           const key = data.id;
@@ -34,17 +35,68 @@ class MarstekApp extends Homey.App {
         }
       });
 
-      this.socket.on('error', (err) => {
+      sock.on('error', (err) => {
         this.error('UDP socket error:', err.message);
-        reject(err);
+        if (!this.socket) {
+          reject(err);
+        } else {
+          this._recreateSocket();
+        }
       });
 
-      this.socket.bind(30000, () => {
-        this.socket.setBroadcast(true);
+      sock.on('close', () => {
+        this.log('UDP socket closed unexpectedly');
+        if (this.socket) {
+          this.socket = null;
+          this._recreateSocket();
+        }
+      });
+
+      sock.bind(30000, () => {
+        sock.setBroadcast(true);
+        this.socket = sock;
         this.log('UDP socket bound to port 30000');
         resolve();
       });
     });
+  }
+
+  async _recreateSocket() {
+    if (this._recreating) return;
+    this._recreating = true;
+
+    // Reject all pending requests immediately (fast failure)
+    for (const [id, req] of this.pendingRequests) {
+      this.homey.clearTimeout(req.timer);
+      req.reject(new Error('Socket reconnecting'));
+    }
+    this.pendingRequests.clear();
+
+    if (this.socket) {
+      try {
+        this.socket.removeAllListeners('error');
+        this.socket.removeAllListeners('close');
+        this.socket.close();
+      } catch (e) { /* already closed */ }
+      this.socket = null;
+    }
+
+    const delays = [2000, 5000, 10000, 30000, 60000];
+    for (let i = 0; i < delays.length; i++) {
+      this.log(`Recreating socket in ${delays[i] / 1000}s (attempt ${i + 1}/${delays.length})...`);
+      await new Promise(r => this.homey.setTimeout(r, delays[i]));
+      try {
+        await this._initSocket();
+        this.log('Socket recreated successfully');
+        this._recreating = false;
+        return;
+      } catch (err) {
+        this.error(`Socket recreation attempt ${i + 1} failed:`, err.message);
+      }
+    }
+
+    this.error('Failed to recreate socket after all attempts');
+    this._recreating = false;
   }
 
   // ── Battery commands (JSON protocol) ────────────────
@@ -52,7 +104,7 @@ class MarstekApp extends Homey.App {
   sendCommand(ip, port, method, params = { id: 0 }, timeout = 5000) {
     return new Promise((resolve, reject) => {
       if (!this.socket) {
-        return reject(new Error('UDP socket not initialized'));
+        return reject(new Error('Socket not ready'));
       }
 
       const id = ++this.requestId;
@@ -76,6 +128,8 @@ class MarstekApp extends Homey.App {
   }
 
   async discover(port = 30000) {
+    if (!this.socket) throw new Error('Socket not ready');
+
     const devices = [];
 
     const collector = (msg, rinfo) => {
@@ -118,7 +172,7 @@ class MarstekApp extends Homey.App {
   sendMeterCommand(host, port, deviceType, batteryMac, ctType, ctMac, timeout = 5000) {
     return new Promise((resolve, reject) => {
       if (!this.socket) {
-        return reject(new Error('UDP socket not initialized'));
+        return reject(new Error('Socket not ready'));
       }
 
       port = parseInt(port, 10) || 12345;
@@ -148,18 +202,22 @@ class MarstekApp extends Homey.App {
 
       this.socket.on('message', collector);
 
-      this.socket.send(payload, port, '255.255.255.255', (err) => {
-        if (err && !settled) {
-          settled = true;
-          this.homey.clearTimeout(timer);
-          this.socket.removeListener('message', collector);
-          reject(err);
+      this.socket.send(payload, port, host, (err) => {
+        if (err) {
+          if (!settled) {
+            settled = true;
+            this.homey.clearTimeout(timer);
+            this.socket.removeListener('message', collector);
+            reject(err);
+          }
         }
       });
     });
   }
 
   async discoverMeters(port = 12345) {
+    if (!this.socket) throw new Error('Socket not ready');
+
     const meters = [];
     const payload = buildPayload('HMG-50', '000000000000', 'HME-3', '000000000000');
 
@@ -194,7 +252,7 @@ class MarstekApp extends Homey.App {
     this.pendingRequests.clear();
 
     if (this.socket) {
-      this.socket.close();
+      try { this.socket.removeAllListeners(); this.socket.close(); } catch (e) { /* */ }
       this.socket = null;
     }
   }

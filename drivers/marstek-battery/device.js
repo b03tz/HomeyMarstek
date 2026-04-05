@@ -116,11 +116,17 @@ class MarstekBatteryDevice extends Homey.Device {
   _startPolling() {
     const intervalSec = this.getSetting('pollInterval') || POLL_INTERVAL;
 
-    this._poll();
+    // Stagger first poll with random delay (0-5s) to avoid both batteries
+    // firing at the exact same time and overwhelming the device
+    const stagger = Math.floor(Math.random() * 5000);
+    this.log(`Starting poll every ${intervalSec}s (first poll in ${stagger}ms)`);
 
-    this.pollInterval = this.homey.setInterval(() => {
+    this.homey.setTimeout(() => {
       this._poll();
-    }, intervalSec * 1000);
+      this.pollInterval = this.homey.setInterval(() => {
+        this._poll();
+      }, intervalSec * 1000);
+    }, stagger);
   }
 
   _stopPolling() {
@@ -239,6 +245,13 @@ class MarstekBatteryDevice extends Homey.Device {
   async _poll() {
     if (this._polling) return;
     this._polling = true;
+
+    // Skip polling if socket is being recreated (don't count as error)
+    if (!this.homey.app.socket) {
+      this.log('Socket not ready, skipping poll');
+      this._polling = false;
+      return;
+    }
 
     const intervalMs = (this.getSetting('pollInterval') || POLL_INTERVAL) * 1000;
     const deadline = Date.now() + intervalMs - 1000;
